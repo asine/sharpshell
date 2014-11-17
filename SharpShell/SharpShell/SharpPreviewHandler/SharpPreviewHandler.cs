@@ -239,7 +239,7 @@ namespace SharpShell.SharpPreviewHandler
         /// <returns>
         /// If this method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.
         /// </returns>
-        int IPreviewHandler.SetRect(RECT prc)
+        int IPreviewHandler.SetRect(ref RECT prc)
         {
             //  DebugLog key events.
             Log("IPreviewHandler.SetRect called.");
@@ -382,7 +382,7 @@ namespace SharpShell.SharpPreviewHandler
         /// <returns>
         /// If the keystroke message can be processed by the preview handler, the handler will process it and return S_OK. If the preview handler cannot process the keystroke message, it will offer it to the host using TranslateAccelerator. If the host processes the message, this method will return S_OK. If the host does not process the message, this method will return S_FALSE.
         /// </returns>
-        int IPreviewHandler.TranslateAccelerator(MSG pmsg)
+        int IPreviewHandler.TranslateAccelerator(ref MSG pmsg)
         {
             //  TODO: We must offer the ability to handle the translation ourselves - currently we'll just pass onto the frame.
             if (previewHandlerFrame != null)

@@ -26,7 +26,7 @@ namespace SharpShell.Interop
         /// <param name="prc">A pointer to a RECT to be used for the preview.</param>
         /// <returns>If this method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.</returns>
         [PreserveSig] 
-        int SetRect(RECT prc);
+        int SetRect(ref RECT prc);
 
         /// <summary>
         /// Directs the preview handler to load data from the source specified in an earlier Initialize method call, and to begin rendering to the previewer window.
@@ -63,6 +63,6 @@ namespace SharpShell.Interop
         /// <param name="pmsg">A pointer to a window message.</param>
         /// <returns>If the keystroke message can be processed by the preview handler, the handler will process it and return S_OK. If the preview handler cannot process the keystroke message, it will offer it to the host using TranslateAccelerator. If the host processes the message, this method will return S_OK. If the host does not process the message, this method will return S_FALSE.</returns>
         [PreserveSig] 
-        int TranslateAccelerator(MSG pmsg);
+        int TranslateAccelerator(ref MSG pmsg);
     };
 }
