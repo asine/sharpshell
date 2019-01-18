@@ -13,6 +13,7 @@ using ServerManager.TestShell;
 using SharpShell;
 using SharpShell.Attributes;
 using SharpShell.Diagnostics;
+using SharpShell.Helpers;
 using SharpShell.ServerRegistration;
 using SharpShell.SharpContextMenu;
 using SharpShell.SharpDropHandler;
@@ -136,9 +137,6 @@ namespace ServerManager
                 if(File.Exists(arg))
                     AddServer(arg, true);
             }
-
-            //  Set the log availability.
-            enableSharpShellLogToolStripMenuItem.Checked = Logging.IsLoggingEnabled();
         }
 
         private void alwaysUnloadDLLToolStripMenuItem_Click(object sender, EventArgs e)
@@ -422,19 +420,7 @@ namespace ServerManager
         {
             (new AboutForm()).ShowDialog(this);
         }
-
-        private void enableSharpShellLogToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            enableSharpShellLogToolStripMenuItem.Checked = !enableSharpShellLogToolStripMenuItem.Checked;
-            Logging.EnableLogging(enableSharpShellLogToolStripMenuItem.Checked);
-        }
-
-        private void showLogToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //  Show a log view.
-            (new LogView.LogViewForm()).Show(this);
-        }
-
+        
         private void toolStripButtonOpenTestShell_Click(object sender, EventArgs e)
         {
             (new TestShellForm()).ShowDialog(this);
@@ -457,6 +443,52 @@ namespace ServerManager
         private void toolStripButtonAttachDebugger_Click(object sender, EventArgs e)
         {
             Debugger.Launch();
+        }
+
+        private void installToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //  Bail if we have no server selected.
+            if (SelectedServerEntry == null)
+                return;
+
+            //  Create a regasm instance and register the server.
+            var regasm = new RegAsm();
+            var success = Environment.Is64BitOperatingSystem ? regasm.Register64(SelectedServerEntry.ServerPath, true) : regasm.Register32(SelectedServerEntry.ServerPath, true);
+            
+            //  Inform the user of the result.
+            if (success)
+            {
+                MessageBox.Show(@"Installed server successfully.", @"Install Server", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show(@"Failed to install, check the SharpShell log for details.", @"Install Server", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        private void uninstallToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //  Bail if we have no server selected.
+            if (SelectedServerEntry == null)
+                return;
+
+            //  Create a regasm instance and register the server.
+            var regasm = new RegAsm();
+            var success = Environment.Is64BitOperatingSystem ? regasm.Unregister64(SelectedServerEntry.ServerPath) : regasm.Unregister32(SelectedServerEntry.ServerPath);
+
+            //  Inform the user of the result.
+            if (success)
+            {
+                MessageBox.Show(@"Uninstalled server successfully.", @"Uninstall Server", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show(@"Failed to uninstall, check the SharpShell log for details.", @"Uninstall Server", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
     }
 }

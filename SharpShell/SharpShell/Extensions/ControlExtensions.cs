@@ -30,11 +30,16 @@ namespace SharpShell.Extensions
             }
             catch (Exception exception)
             {
-                Logging.DebugError("Failed to pass to wnproc", exception);
+                Logging.Error("Failed to pass to wnproc", exception);
                 return false;
             }
         }
 
+        /// <summary>
+        /// Finds the control inside this control which has focus, if any.
+        /// </summary>
+        /// <param name="this">The the parent control.</param>
+        /// <returns>The child control with focus, or null.</returns>
         public static Control FindFocusedControl(this Control @this)
         {
             var container = @this as ContainerControl;
